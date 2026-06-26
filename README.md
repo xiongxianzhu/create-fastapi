@@ -63,7 +63,7 @@ create-fastapi **工具本身**与**生成项目**使用不同技术栈，职责
 | ASGI | [uvicorn](https://www.uvicorn.org/)（开发 `--reload`，生产 `--workers`） |
 | 生产 | uvicorn + supervisor + nginx |
 
-> 不依赖 SQLModel / Tortoise ORM；不混入 Flask 生态。
+> 不依赖 SQLModel / Tortoise ORM。
 
 **可选模块**（`--redis` / `--celery` / `--docker`，不计入核心栈）：
 
