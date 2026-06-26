@@ -275,6 +275,31 @@ uv sync
 | 所有项目统一镜像 | 在 `~/.zshrc` 等设置 `UV_INDEX_URL`，与项目配置保持一致 |
 | 切换镜像后 | 执行 `uv lock` 再 `uv sync`，并提交更新后的 `uv.lock` |
 
+## llms.txt
+
+<p align="center">
+  <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-LLM_导航-009688?style=flat-square&logo=readthedocs&logoColor=white" alt="llms.txt"/></a>
+  <a href="AGENT.md"><img src="https://img.shields.io/badge/AGENT.md-AI_指南-4051B5?style=flat-square" alt="AGENT.md"/></a>
+  <a href="https://llmstxt.org/"><img src="https://img.shields.io/badge/spec-llmstxt.org-4A4A4A?style=flat-square" alt="llms.txt spec"/></a>
+</p>
+
+> 根目录 [`llms.txt`](llms.txt) 遵循 [llms.txt 规范](https://llmstxt.org/)，为 LLM / AI Agent 提供**精简导航索引**，便于快速理解仓库职责并定位关键文件。
+
+| 区块 | 指向 |
+|------|------|
+| Documentation | [README.md](README.md)、[AGENT.md](AGENT.md) |
+| Specifications | [docs/prd-create-fastapi.md](docs/prd-create-fastapi.md) |
+| Source Code | `cli.py`、`generator.py`、测试 |
+| Templates | 生成项目 Jinja2 模板 |
+| Optional | 许可证、锁文件、次要配置 |
+
+**适用场景**：Cursor / Copilot 等工具加载仓库上下文、自动化 Agent 贡献代码前读本索引。人类读者可直接看 [README.md](README.md)；Agent 优先读 [AGENT.md](AGENT.md) + `llms.txt`。
+
+```bash
+# 将 llms.txt 作为上下文提供给 LLM（示例）
+curl -sL https://raw.githubusercontent.com/xiongxianzhu/create-fastapi/main/llms.txt
+```
+
 ## 开发
 
 ```bash

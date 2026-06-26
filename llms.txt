@@ -1,0 +1,42 @@
+# create-fastapi
+
+> 基于 Typer + Jinja2 的现代 FastAPI 项目生成器 CLI。一条命令输出生产可用的项目骨架（FastAPI、async SQLAlchemy 2.0、Alembic、uvicorn）；只落盘文件，不代跑 uv sync、迁移或启动。
+
+工具运行时依赖仅 Typer 与 Jinja2。生成项目支持可选模块 `--redis`、`--celery`、`--docker`，模板占位变量为 `project_name`、`package_name` 及 `use_*` 门控标志。行为规格以 PRD 为准。
+
+## Documentation
+
+- [README.md](README.md): 用户文档，含安装、命令参考、生成项目结构、PyPI 镜像说明
+- [AGENT.md](AGENT.md): AI Agent 快速上手指南，含目录职责、约束与修改检查清单
+
+## Specifications
+
+- [docs/prd-create-fastapi.md](docs/prd-create-fastapi.md): 产品需求文档，定义 CLI 行为、模板结构、验收标准与范围边界
+
+## Source Code
+
+- [src/create_fastapi/cli.py](src/create_fastapi/cli.py): Typer CLI 入口，参数解析与生成流程编排
+- [src/create_fastapi/generator.py](src/create_fastapi/generator.py): 模板渲染、模块门控、git 浅克隆、项目名校验
+- [src/create_fastapi/__init__.py](src/create_fastapi/__init__.py): 包版本号
+- [tests/test_generator.py](tests/test_generator.py): 生成逻辑单元测试（命名、门控、覆盖保护、模板解析）
+
+## Templates
+
+- [src/create_fastapi/templates/](src/create_fastapi/templates/): 生成项目的 Jinja2 模板根目录
+- [src/create_fastapi/templates/app/main.py](src/create_fastapi/templates/app/main.py): FastAPI 应用入口（lifespan、路由挂载）
+- [src/create_fastapi/templates/pyproject.toml](src/create_fastapi/templates/pyproject.toml): 生成项目依赖与工具配置
+- [src/create_fastapi/templates/Makefile](src/create_fastapi/templates/Makefile): 生成项目常用开发命令封装
+- [src/create_fastapi/templates/README.md](src/create_fastapi/templates/README.md): 生成项目内 README 模板
+
+## Configuration
+
+- [pyproject.toml](pyproject.toml): 工具包构建、开发依赖与 uv 腾讯 PyPI 源
+- [.cursor/rules/git-workflow.mdc](.cursor/rules/git-workflow.mdc): 分支命名与 Conventional Commits 规范
+
+## Optional
+
+- [LICENSE](LICENSE): MIT 许可证
+- [uv.lock](uv.lock): 工具仓库依赖锁文件
+- [src/create_fastapi/templates/alembic/env.py](src/create_fastapi/templates/alembic/env.py): 生成项目的 Alembic 异步迁移环境
+- [src/create_fastapi/templates/deploy/supervisor/{{ project_name }}.conf](src/create_fastapi/templates/deploy/supervisor/{{ project_name }}.conf): supervisor 模板（uvicorn 进程）
+- [.cursor/rules/git-commit-message.mdc](.cursor/rules/git-commit-message.mdc): Cursor 提交信息生成规则（简体中文）
