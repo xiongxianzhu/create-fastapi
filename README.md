@@ -229,6 +229,7 @@ my-api/
 │   └── nginx/           # 反向代理示例
 ├── tests/
 ├── alembic.ini
+├── Makefile             # 常用开发命令（make dev / migrate / check 等）
 └── pyproject.toml
 ```
 
