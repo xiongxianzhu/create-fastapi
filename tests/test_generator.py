@@ -52,6 +52,7 @@ def test_base_generation(tmp_path: Path) -> None:
     assert (target / ".python-version").exists()
     assert (target / ".gitignore").exists()
     assert (target / "alembic" / "env.py").exists()
+    assert (target / "Makefile").exists()
     assert (target / "deploy" / "supervisor" / "my-api.conf").exists()
     assert (target / "deploy" / "nginx" / "my-api.conf").exists()
     assert (target / "logs" / ".gitkeep").exists()

@@ -21,6 +21,15 @@
 ## 快速开始
 
 ```bash
+make install
+make setup
+make migrate
+make dev
+```
+
+或手动：
+
+```bash
 uv sync
 cp .env.example .env
 uv run alembic upgrade head
@@ -33,12 +42,13 @@ uv run uvicorn app.main:app --reload
 
 | 场景 | 命令 |
 |------|------|
-| 开发 | `uv run uvicorn app.main:app --reload` |
-| 迁移 | `uv run alembic revision --autogenerate -m "msg"` → `uv run alembic upgrade head` |
-| 质量 | `uv run ruff check .` · `uv run mypy` · `uv run pytest` |
-| 生产 | `uv sync --frozen --no-dev` → supervisor 拉起 uvicorn → nginx 反代 |
-{% if use_celery %}| Worker | `uv run celery -A app.celery_app:celery_app worker -l info` |
-{% endif %}{% if use_docker %}| 容器 | `docker compose up --build` |
+| 帮助 | `make help` |
+| 开发 | `make dev` |
+| 迁移 | `make revision MSG="描述"` → `make migrate` |
+| 质量 | `make lint` · `make typecheck` · `make test` · `make check` |
+| 生产 | `make prod-install` → supervisor 拉起 uvicorn → nginx 反代 |
+{% if use_celery %}| Worker | `make celery` |
+{% endif %}{% if use_docker %}| 容器 | `make docker-up` · `make docker-down` |
 {% endif %}
 
 ## 目录一览
@@ -48,6 +58,7 @@ app/          main · core · db · api · models · schemas · services
 alembic/      迁移
 deploy/       supervisor/{{ project_name }}.conf · nginx/{{ project_name }}.conf
 tests/
+Makefile      常用开发命令
 ```
 
 ## 生产部署
