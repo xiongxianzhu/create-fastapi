@@ -1,0 +1,50 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-change-me-please}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://postgres:postgres@db:5432/{{ package_name }}}
+{% if use_redis %}      - REDIS_URL=redis://redis:6379/0
+{% endif %}{% if use_celery %}      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+{% endif %}
+    depends_on:
+      - db
+{% if use_redis %}      - redis
+{% endif %}
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: {{ package_name }}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+{% if use_redis %}
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    expose:
+      - "6379"
+{% endif %}{% if use_celery %}
+  worker:
+    build: .
+    command: uv run celery -A app.celery_app:celery_app worker -l info
+    environment:
+      - APP_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-change-me-please}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://postgres:postgres@db:5432/{{ package_name }}}
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    depends_on:
+      - db
+      - redis
+{% endif %}
+
+volumes:
+  pgdata:
