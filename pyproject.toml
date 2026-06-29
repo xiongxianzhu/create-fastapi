@@ -3,7 +3,7 @@ name = "create-fastapi"
 version = "0.1.0"
 description = "现代 FastAPI 项目生成器：uv + ruff + pydantic-settings + SQLModel + uvicorn，基于 Typer 的 CLI 脚手架。"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 license = { file = "LICENSE" }
 dependencies = [
     "typer>=0.12",
@@ -32,7 +32,7 @@ include = ["src/create_fastapi", "README.md", "LICENSE"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py314"
 extend-exclude = ["src/create_fastapi/templates"]
 
 [tool.ruff.lint]
@@ -40,7 +40,7 @@ select = ["E", "F", "I", "UP", "B"]
 ignore = ["B008"]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 ignore_missing_imports = true
 files = ["src/create_fastapi"]
 exclude = "src/create_fastapi/templates/"

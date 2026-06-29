@@ -2,7 +2,7 @@
 
 **文档版本**：v1.0  
 **创建日期**：20260626  
-**最后更新**：20260626（v1.1 修订：生产部署以 uvicorn 为主）  
+**最后更新**：20260626（v1.3 修订：Python 3.14、依赖版本与 `[standard]` 对齐）  
 
 ---
 
@@ -59,11 +59,12 @@
 
 - **需求描述**：应提供全局可安装的 CLI 包 `create-fastapi`，命令形如 `create-fastapi my-api [OPTIONS]`。
 - **验收标准**：
-  - 给定 Python 3.13+ 环境，执行 `uv tool install git+https://github.com/xiongxianzhu/create-fastapi.git` 后，`create-fastapi --version` 应输出版本号。
+  - 给定 Python 3.14+ 环境，执行 `uv tool install git+https://github.com/xiongxianzhu/create-fastapi.git` 后，`create-fastapi --version` 应输出版本号。
   - 执行 `create-fastapi --help` 应列出全部参数说明。
   - 在工具仓库内执行 `uv run create-fastapi my-api` 应无需全局安装即可生成项目。
 - **安装方式**（文档中应说明，实现应兼容）：
   - `uv tool install create-fastapi`（PyPI 发布后）
+  - `uvx create-fastapi` / `uvx --from git+... create-fastapi`（临时运行，无需全局安装）
   - `pip install` / `pipx install`
   - 本地开发：`git clone` + `uv sync` + `uv run create-fastapi`
 
@@ -100,7 +101,7 @@
 
 | 类别 | 技术 | 说明 |
 |------|------|------|
-| 语言 | Python 3.13+ | 与生成项目一致 |
+| 语言 | Python 3.14+ | 与生成项目一致 |
 | CLI | Typer | 子命令与选项解析 |
 | 模板 | Jinja2 | 文本渲染与文件名渲染 |
 | 打包 | hatchling | `pyproject.toml` 构建 |
@@ -114,13 +115,13 @@
 
 | 类别 | 技术 | 说明 |
 |------|------|------|
-| 运行时 | Python 3.13 · uv | 依赖管理与锁文件 |
-| Web | FastAPI | 纯 APIRouter + 依赖注入 |
-| 校验 / 配置 | Pydantic 2 · pydantic-settings | 请求/响应模型与环境配置 |
-| 数据 | SQLModel · Alembic | async session；`table=True` 表模型；内置 SQLAlchemy 2.0 |
-| DB 驱动 | asyncpg（PostgreSQL） | 默认异步 PostgreSQL；`.env.example` 提供 SQLite 测试说明 |
+| 运行时 | Python 3.14 · uv | 依赖管理与锁文件 |
+| Web | FastAPI 0.138+（`[standard]`） | 纯 APIRouter + 依赖注入 |
+| 校验 / 配置 | Pydantic 2 · pydantic-settings 2.14+ | 请求/响应模型与环境配置 |
+| 数据 | SQLModel 0.0.39+ · Alembic 1.18+ | async session；`table=True` 表模型；内置 SQLAlchemy 2.0 |
+| DB 驱动 | asyncpg 0.31+（PostgreSQL） | 默认异步 PostgreSQL；`.env.example` 提供 SQLite 测试说明 |
 | 代码质量 | ruff · mypy | lint / format / 类型检查 |
-| ASGI 服务 | uvicorn | 开发与生产统一使用；开发 `--reload`，生产 `--workers` + supervisor |
+| ASGI 服务 | uvicorn 0.49+（`[standard]`） | 开发与生产统一使用；开发 `--reload`，生产 `--workers` + supervisor |
 | 反向代理 | nginx · supervisor | nginx 前置；supervisor 托管 uvicorn 进程 |
 
 - **设计原则**：
@@ -166,9 +167,9 @@ my-api/
 │   └── test_health.py
 ├── logs/.gitkeep
 ├── alembic.ini
-├── pyproject.toml           # 可含 [project.scripts] 或文档化 uvicorn 启动命令
+├── pyproject.toml           # 依赖（含 `[tool.fastapi] entrypoint`）与工具配置
 ├── .env.example
-├── .python-version          # 3.13
+├── .python-version          # 3.14
 ├── .gitignore
 └── README.md                # 生成后用户自行 uv sync / migrate / run 的说明
 ```
@@ -324,7 +325,7 @@ create-fastapi <name> [OPTIONS]
 
 ### 5.1 技术约束
 
-- Python **3.13+** 为工具与生成项目的最低版本。
+- Python **3.14+** 为工具与生成项目的最低版本。
 - 包管理**必须**以 uv 为一等公民（`pyproject.toml` + `uv.lock`）。
 - 参考实现：[create-flask](https://github.com/xiongxianzhu/create-flask) 的 CLI 行为、模板约定与模块门控，API 层按 FastAPI  idioms 重写。
 - 许可证：MIT（与 create-fastapi 仓库一致）。
@@ -383,3 +384,4 @@ create-fastapi <name> [OPTIONS]
 |------|------|----------|------|
 | 20260626 | v1.0 | 初稿 | — |
 | 20260626 | v1.2 | 数据层改为 SQLModel（替代直接使用 SQLAlchemy 2.0） | — |
+| 20260626 | v1.3 | Python 3.14；生成项目依赖升级（FastAPI 0.138+、SQLModel 0.0.39+ 等）；`[standard]` extras | — |

@@ -1,6 +1,6 @@
 # create-fastapi
 
-> 基于 Typer + Jinja2 的现代 FastAPI 项目生成器 CLI。一条命令输出生产可用的项目骨架（FastAPI、SQLModel async、Alembic、uvicorn）；只落盘文件，不代跑 uv sync、迁移或启动。
+> 基于 Typer + Jinja2 的现代 FastAPI 项目生成器 CLI。一条命令输出生产可用的项目骨架（Python 3.14+、FastAPI 0.138+、SQLModel async、Alembic、uvicorn）；只落盘文件，不代跑 uv sync、迁移或启动。
 
 工具运行时依赖仅 Typer 与 Jinja2。生成项目以 SQLModel 为数据层（内置 SQLAlchemy 2.0）；参考 full-stack-fastapi-template。可选模块 `--redis`、`--celery`、`--docker`。
 

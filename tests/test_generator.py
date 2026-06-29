@@ -49,7 +49,7 @@ def test_base_generation(tmp_path: Path) -> None:
     assert (target / "app" / "main.py").exists()
     assert (target / "pyproject.toml").exists()
     assert (target / ".env.example").exists()
-    assert (target / ".python-version").exists()
+    assert (target / ".python-version").read_text(encoding="utf-8").strip() == "3.14"
     assert (target / ".gitignore").exists()
     assert (target / "alembic" / "env.py").exists()
     assert (target / "Makefile").exists()
@@ -76,6 +76,7 @@ def test_pyproject_name_substituted(tmp_path: Path) -> None:
     assert "pydantic-settings" in content
     assert "sqlmodel>=" in content
     assert "greenlet>=" in content
+    assert 'requires-python = ">=3.14"' in content
     assert "sqlalchemy[asyncio]" not in content
     assert "redis" not in content
     assert "celery" not in content
@@ -201,7 +202,7 @@ def test_custom_local_template(tmp_path: Path) -> None:
         "NAME = '{{ project_name }}'\n{% if use_redis %}REDIS = True\n{% endif %}",
         encoding="utf-8",
     )
-    (tpl / "Dockerfile").write_text("FROM python:3.13\n", encoding="utf-8")
+    (tpl / "Dockerfile").write_text("FROM python:3.14\n", encoding="utf-8")
 
     target = tmp_path / "out"
     with resolve_template(str(tpl)) as tdir:

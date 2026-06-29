@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
   <img src="https://img.shields.io/badge/CLI-Typer-009485?style=flat-square" alt="Typer"/>
   <img src="https://img.shields.io/badge/模板-Jinja2-B41717?style=flat-square" alt="Jinja2"/>
   <img src="https://img.shields.io/badge/产物-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI"/>
@@ -29,7 +29,7 @@
 ## 关键约束
 
 - 运行时依赖仅 **Typer + Jinja2**
-- 生成项目：**FastAPI + SQLModel async + Alembic + uvicorn**
+- 生成项目：**Python 3.14+** · FastAPI 0.138+（`[standard]`）· SQLModel 0.0.39+ async · Alembic · uvicorn 0.49+（`[standard]`）
 - 可选模块：`--redis` / `--celery` / `--docker`，通过 `CELERY_PATHS` / `REDIS_PATHS` / `DOCKER_PATHS` 门控
 - 占位变量：`{{ project_name }}`、`{{ package_name }}`、`use_redis`、`use_celery`、`use_docker`
 - **不得**在 CLI 内执行 `uv sync`、迁移或服务启动

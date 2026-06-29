@@ -5,16 +5,16 @@
 </p>
 
 <p align="center">
-  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.13"/></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/Python-3.14-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.14"/></a>
   <a href="https://github.com/astral-sh/uv"><img src="https://img.shields.io/badge/uv-managed-DE5FE9?style=for-the-badge&logo=uv&logoColor=white" alt="uv"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2EA043?style=for-the-badge" alt="MIT License"/></a>
 </p>
 
 <p align="center">
-  <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-APIRouter-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/></a>
-  <a href="https://github.com/fastapi/sqlmodel"><img src="https://img.shields.io/badge/SQLModel-0.0.24+-059669?style=for-the-badge&logo=fastapi&logoColor=white" alt="SQLModel"/></a>
+  <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-0.138+-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/></a>
+  <a href="https://github.com/fastapi/sqlmodel"><img src="https://img.shields.io/badge/SQLModel-0.0.39+-059669?style=for-the-badge&logo=fastapi&logoColor=white" alt="SQLModel"/></a>
   <a href="https://docs.pydantic.dev/"><img src="https://img.shields.io/badge/Pydantic-2-E92063?style=for-the-badge&logo=pydantic&logoColor=white" alt="Pydantic 2"/></a>
-  <a href="https://www.uvicorn.org/"><img src="https://img.shields.io/badge/uvicorn-ASGI-4051B5?style=for-the-badge" alt="uvicorn"/></a>
+  <a href="https://www.uvicorn.org/"><img src="https://img.shields.io/badge/uvicorn-0.49+-4051B5?style=for-the-badge" alt="uvicorn"/></a>
 </p>
 
 <p align="center">
@@ -43,7 +43,7 @@ create-fastapi **工具本身**与**生成项目**使用不同技术栈，职责
 
 | 类别 | 技术 |
 |------|------|
-| 语言 | Python 3.13 |
+| 语言 | Python 3.14 |
 | CLI | [Typer](https://typer.tiangolo.com/) |
 | 模板引擎 | [Jinja2](https://jinja.palletsprojects.com/) |
 | 打包 | [hatchling](https://hatch.pypa.io/) |
@@ -55,12 +55,12 @@ create-fastapi **工具本身**与**生成项目**使用不同技术栈，职责
 
 | 类别 | 技术 |
 |------|------|
-| 运行时 | Python 3.13 · [uv](https://github.com/astral-sh/uv) |
-| Web | [FastAPI](https://fastapi.tiangolo.com/)（APIRouter + Depends） |
-| 校验 / 配置 | [Pydantic](https://docs.pydantic.dev/) 2 · pydantic-settings |
-| 数据 | [SQLModel](https://github.com/fastapi/sqlmodel) · [Alembic](https://alembic.sqlalchemy.org/) · asyncpg |
+| 运行时 | Python 3.14 · [uv](https://github.com/astral-sh/uv) |
+| Web | [FastAPI](https://fastapi.tiangolo.com/) 0.138+（`[standard]` · APIRouter + Depends） |
+| 校验 / 配置 | [Pydantic](https://docs.pydantic.dev/) 2 · pydantic-settings 2.14+ |
+| 数据 | [SQLModel](https://github.com/fastapi/sqlmodel) 0.0.39+ · [Alembic](https://alembic.sqlalchemy.org/) 1.18+ · asyncpg 0.31+ |
 | 代码质量 | [ruff](https://docs.astral.sh/ruff/) · [mypy](https://mypy-lang.org/) |
-| ASGI | [uvicorn](https://www.uvicorn.org/)（开发 `--reload`，生产 `--workers`） |
+| ASGI | [uvicorn](https://www.uvicorn.org/) 0.49+（`[standard]` · 开发 `--reload`，生产 `--workers`） |
 | 生产 | uvicorn + supervisor + nginx |
 
 > [SQLModel](https://github.com/fastapi/sqlmodel) 由 FastAPI 官方维护，内置 SQLAlchemy 2.0 与 Pydantic；本模板以 **SQLModel async** 为数据层，`models/`（`table=True`）与 `schemas/`（API 入出参）职责分离。
@@ -104,7 +104,7 @@ create-fastapi **工具本身**与**生成项目**使用不同技术栈，职责
 
 ## 安装
 
-**要求**：Python 3.13+；推荐 [uv](https://github.com/astral-sh/uv)。使用 git 模板时需系统已安装 `git`。
+**要求**：Python 3.14+；推荐 [uv](https://github.com/astral-sh/uv)。使用 git 模板时需系统已安装 `git`。
 
 **安装方式**：常用 **`uv tool install`** 全局安装 CLI；偶尔使用或不想污染 PATH 时，可用 **`uvx`** 临时运行（见下文）。
 

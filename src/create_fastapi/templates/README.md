@@ -5,9 +5,10 @@
 </p>
 
 <p align="center">
-  <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI"/></a>
-  <a href="https://www.uvicorn.org/"><img src="https://img.shields.io/badge/uvicorn-ASGI-4051B5?style=flat-square" alt="uvicorn"/></a>
-  <a href="https://github.com/fastapi/sqlmodel"><img src="https://img.shields.io/badge/SQLModel-0.0.24+-059669?style=flat-square&logo=fastapi&logoColor=white" alt="SQLModel"/></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/></a>
+  <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-0.138+-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI"/></a>
+  <a href="https://www.uvicorn.org/"><img src="https://img.shields.io/badge/uvicorn-0.49+-4051B5?style=flat-square" alt="uvicorn"/></a>
+  <a href="https://github.com/fastapi/sqlmodel"><img src="https://img.shields.io/badge/SQLModel-0.0.39+-059669?style=flat-square&logo=fastapi&logoColor=white" alt="SQLModel"/></a>
   <a href="https://docs.pydantic.dev/"><img src="https://img.shields.io/badge/Pydantic-2-E92063?style=flat-square&logo=pydantic&logoColor=white" alt="Pydantic"/></a>
   <a href="https://github.com/astral-sh/uv"><img src="https://img.shields.io/badge/uv-DE5FE9?style=flat-square&logo=uv&logoColor=white" alt="uv"/></a>
 {% if use_redis %}  <img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" alt="Redis"/>
@@ -50,9 +51,22 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 
 ## 依赖说明
 
+**要求**：Python 3.14+（见 `.python-version`）。
+
+| 包 | 最低版本 |
+|------|----------|
+| `fastapi[standard]` | 0.138.1 |
+| `uvicorn[standard]` | 0.49.0 |
+| `pydantic-settings` | 2.14.2 |
+| `sqlmodel` | 0.0.39 |
+| `alembic` | 1.18.5 |
+| `asyncpg` | 0.31.0 |
+| `greenlet` | 3.5.3 |
+| `python-dotenv` | 1.2.2 |
+
 | 环境 | 命令 | 内容 |
 |------|------|------|
-| 开发 | `make install` / `uv sync` | `fastapi[standard]` · `uvicorn[standard]`（含 uvloop、watchfiles、表单/邮箱校验等）+ `dev` 组 |
+| 开发 | `make install` / `uv sync` | 上表运行时依赖 + `dev` 组（ruff、mypy、pytest、httpx、aiosqlite） |
 | 生产 | `make prod-install` | 运行时依赖（含 `[standard]` extras），`uv sync --frozen --no-dev` |
 
 ## 常用命令
