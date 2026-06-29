@@ -37,6 +37,23 @@ uv run alembic upgrade head
 uv run uvicorn app.main:app --reload
 ```
 
+## FastAPI CLI
+
+`pyproject.toml` 中已配置 `[tool.fastapi] entrypoint = "app.main:app"`，可直接使用 FastAPI 官方 CLI（随 `fastapi[standard]` 安装）：
+
+```bash
+# 开发（热重载，默认 http://127.0.0.1:8000）
+uv run fastapi dev
+
+# 指定 host / port
+uv run fastapi dev --host 0.0.0.0 --port 8080
+
+# 生产（无热重载；多 worker 示例）
+uv run fastapi run --host 127.0.0.1 --port 8000 --workers 4
+```
+
+与 `make dev`（底层为 `uvicorn --reload`）等价；生产环境亦可继续用 supervisor 配置中的 `uvicorn` 命令。
+
 健康检查 → `GET /api/v1/health` · 文档 → `/docs`
 
 ## 环境变量
@@ -74,7 +91,8 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 | 场景 | 命令 |
 |------|------|
 | 帮助 | `make help` |
-| 开发 | `make dev` |
+| 开发 | `make dev` · `uv run fastapi dev` |
+| 生产运行 | `uv run fastapi run`（或 supervisor / uvicorn） |
 | 迁移 | `make revision MSG="描述"` → `make migrate` |
 | 质量 | `make lint` · `make typecheck` · `make test` · `make check` |
 | 生产 | `make prod-install` → supervisor 拉起 uvicorn → nginx 反代 |
