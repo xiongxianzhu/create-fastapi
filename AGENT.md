@@ -29,7 +29,7 @@
 ## 关键约束
 
 - 运行时依赖仅 **Typer + Jinja2**
-- 生成项目：**FastAPI + async SQLAlchemy 2.0 + Alembic + uvicorn**（不用 gunicorn 默认模板）
+- 生成项目：**FastAPI + SQLModel async + Alembic + uvicorn**
 - 可选模块：`--redis` / `--celery` / `--docker`，通过 `CELERY_PATHS` / `REDIS_PATHS` / `DOCKER_PATHS` 门控
 - 占位变量：`{{ project_name }}`、`{{ package_name }}`、`use_redis`、`use_celery`、`use_docker`
 - **不得**在 CLI 内执行 `uv sync`、迁移或服务启动
@@ -67,5 +67,9 @@ cd /tmp/my-api && uv sync && uv run pytest
 
 ## 参考
 
-- 姊妹项目：[create-flask](https://github.com/xiongxianzhu/create-flask)
-- 用户文档：[README.md](README.md)
+| 项目 | 说明 |
+|------|------|
+| [create-flask](https://github.com/xiongxianzhu/create-flask) | 姊妹 CLI 脚手架 |
+| [full-stack-fastapi-template](https://github.com/fastapi/full-stack-fastapi-template) | FastAPI 官方全栈模板，后端模式可借鉴 |
+| [sqlmodel](https://github.com/fastapi/sqlmodel) | FastAPI 官方 ORM，本模板默认数据层 |
+| [README.md](README.md) | 用户文档 |

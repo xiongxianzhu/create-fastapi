@@ -1,5 +1,7 @@
-"""ORM 模型包；导入模型以便 Alembic 侦测 metadata。"""
+"""SQLModel 表模型；导入以确保 Alembic 侦测 metadata。"""
 
-from app.db.base import Base, TimestampMixin
+from sqlmodel import SQLModel
 
-__all__ = ["Base", "TimestampMixin"]
+from app.models.base import TimestampMixin
+
+__all__ = ["SQLModel", "TimestampMixin"]

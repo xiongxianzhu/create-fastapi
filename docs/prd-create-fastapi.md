@@ -10,7 +10,7 @@
 
 ### 1.1 背景与目标
 
-- **业务背景**：FastAPI 已成为 Python 异步 Web API 的主流选择，但社区缺少与 [create-flask](https://github.com/xiongxianzhu/create-flask) 同等定位的、基于现代工具链（uv、Pydantic 2、SQLAlchemy 2.0、Typer）的一键脚手架。开发者每次新建项目需重复搭建目录结构、依赖配置、数据库会话、异常处理与部署模板，成本高且风格不一。
+- **业务背景**：FastAPI 已成为 Python 异步 Web API 的主流选择，但社区缺少与 [create-flask](https://github.com/xiongxianzhu/create-flask) 同等定位的、基于现代工具链（uv、Pydantic 2、SQLModel、Typer）的一键脚手架。开发者每次新建项目需重复搭建目录结构、依赖配置、数据库会话、异常处理与部署模板，成本高且风格不一。
 - **核心目标**：提供一条命令即可生成**生产可用**的现代 FastAPI 项目骨架；生成后由用户自行 `uv sync`、迁移与启动，工具**不得**代跑任何初始化命令。
 - **目标用户**：
   - 需要快速启动 API 服务的 Python 后端开发者
@@ -117,7 +117,7 @@
 | 运行时 | Python 3.13 · uv | 依赖管理与锁文件 |
 | Web | FastAPI | 纯 APIRouter + 依赖注入 |
 | 校验 / 配置 | Pydantic 2 · pydantic-settings | 请求/响应模型与环境配置 |
-| 数据 | SQLAlchemy 2.0 · Alembic | 异步引擎与会话；`Mapped` / `mapped_column` |
+| 数据 | SQLModel · Alembic | async session；`table=True` 表模型；内置 SQLAlchemy 2.0 |
 | DB 驱动 | asyncpg（PostgreSQL） | 默认异步 PostgreSQL；`.env.example` 提供 SQLite 测试说明 |
 | 代码质量 | ruff · mypy | lint / format / 类型检查 |
 | ASGI 服务 | uvicorn | 开发与生产统一使用；开发 `--reload`，生产 `--workers` + supervisor |
@@ -125,9 +125,9 @@
 
 - **设计原则**：
   - **不得**依赖 Flask-RESTful、Flask-Smorest、Marshmallow 等 Flask 生态包。
-  - **不得**以 SQLModel / Tortoise ORM 替代 SQLAlchemy 2.0 作为默认 ORM（保持与 create-flask 一致的显式分层）。
-  - FastAPI 原生 Pydantic 模型作为入参/出参；`schemas/` 与 `models/` 职责分离。
-  - 采用 **async SQLAlchemy 2.0 + async session**，路由处理函数默认为 `async def`，符合 FastAPI 主流实践。
+  - **默认**使用 [SQLModel](https://github.com/fastapi/sqlmodel) 作为 ORM（内置 SQLAlchemy 2.0 + Pydantic）；`models/` 放 `table=True`，`schemas/` 放 API 入出参。
+  - 参考 [full-stack-fastapi-template](https://github.com/fastapi/full-stack-fastapi-template) 的路由拆分、`SessionDep`、Settings 与 Docker 流水线思路，但不引入 React / Traefik 全栈部分。
+  - 采用 **async SQLModel session**，路由处理函数默认为 `async def`。
 
 #### 2.2.6 生成项目目录结构
 
@@ -141,8 +141,7 @@ my-api/
 │   │   ├── constants.py     # 常量 / 枚举
 │   │   └── security.py      # 鉴权依赖占位（Depends 扩展点）
 │   ├── db/
-│   │   ├── base.py          # DeclarativeBase / Base
-│   │   └── session.py       # async engine、async_sessionmaker、get_db 依赖
+│   │   └── session.py       # async engine、AsyncSession、get_db / SessionDep
 │   ├── api/
 │   │   ├── deps.py          # 公共 Depends（如 get_db、分页）
 │   │   └── v1/
@@ -152,8 +151,8 @@ my-api/
 │   │       └── admin/       # 可选：管理端路由前缀 /api/admin/v1
 │   │           └── endpoints/
 │   │               └── health.py
-│   ├── models/              # SQLAlchemy ORM
-│   ├── schemas/             # Pydantic 入参/出参，可按 user/admin 分子包
+│   ├── models/              # SQLModel 表模型（table=True）
+│   ├── schemas/             # SQLModel API 入出参（无 table）
 │   ├── services/            # 业务逻辑（与框架解耦）
 │   ├── tasks/               # 仅 --celery：Celery 任务
 │   ├── celery_app.py        # 仅 --celery
@@ -186,9 +185,9 @@ my-api/
 
 - **路由层**（`api/v1/endpoints/`）：仅负责 HTTP 语义、调用 service、声明 `response_model`；**不得**编写复杂业务逻辑。
 - **服务层**（`services/`）：业务逻辑，接收 session / 领域对象，便于单测。
-- **模型层**（`models/`）：SQLAlchemy 2.0 声明式模型；提供 `TimestampMixin`（`created_at` / `updated_at`）基类 mixin。
-- **Schema 层**（`schemas/`）：Pydantic v2 `BaseModel`；区分 `Create` / `Update` / `Read` 模式（示例即可）。
-- **依赖注入**：数据库会话通过 `Depends(get_db)` 注入；公共依赖集中在 `api/deps.py`。
+- **模型层**（`models/`）：SQLModel `table=True`；提供 `TimestampMixin`。
+- **Schema 层**（`schemas/`）：SQLModel 无表模型；区分 `Create` / `Read` 模式（示例见 `schemas/common.py`）。
+- **依赖注入**：`SessionDep = Annotated[AsyncSession, Depends(get_db)]`。
 - **配置**：`Settings` 从环境变量 / `.env` 读取；`.env.example` 须含 `DATABASE_URL`、`APP_ENV`、Redis/Celery 占位项。
 - **验收标准**：
   - 示例 `health` 接口应使用 `APIRouter`，并在 `router.py` 中 `include_router`。
@@ -372,7 +371,7 @@ create-fastapi <name> [OPTIONS]
 | 维度 | create-flask | create-fastapi |
 |------|--------------|----------------|
 | Web 框架 | Flask 蓝图 + 视图函数 | FastAPI APIRouter + Depends |
-| ORM 集成 | Flask-SQLAlchemy | 原生 SQLAlchemy 2.0 async |
+| ORM 集成 | Flask-SQLAlchemy | SQLModel async |
 | 迁移 | Flask-Migrate | Alembic |
 | 入口 | wsgi.py + gunicorn | app.main:app + uvicorn（开发 `--reload`，生产 `--workers`） |
 | 校验 | Pydantic（手动） | Pydantic（FastAPI 原生） |
@@ -383,4 +382,4 @@ create-fastapi <name> [OPTIONS]
 | 日期 | 版本 | 变更内容 | 作者 |
 |------|------|----------|------|
 | 20260626 | v1.0 | 初稿 | — |
-| 20260626 | v1.1 | 生产部署改为以 uvicorn 为主，移除 gunicorn 默认模板 | — |
+| 20260626 | v1.2 | 数据层改为 SQLModel（替代直接使用 SQLAlchemy 2.0） | — |

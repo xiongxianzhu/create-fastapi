@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-APIRouter-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/></a>
-  <a href="https://www.sqlalchemy.org/"><img src="https://img.shields.io/badge/SQLAlchemy-2.0_async-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white" alt="SQLAlchemy 2.0"/></a>
+  <a href="https://github.com/fastapi/sqlmodel"><img src="https://img.shields.io/badge/SQLModel-0.0.24+-059669?style=for-the-badge&logo=fastapi&logoColor=white" alt="SQLModel"/></a>
   <a href="https://docs.pydantic.dev/"><img src="https://img.shields.io/badge/Pydantic-2-E92063?style=for-the-badge&logo=pydantic&logoColor=white" alt="Pydantic 2"/></a>
   <a href="https://www.uvicorn.org/"><img src="https://img.shields.io/badge/uvicorn-ASGI-4051B5?style=for-the-badge" alt="uvicorn"/></a>
 </p>
@@ -22,7 +22,7 @@
   <a href="https://docs.astral.sh/ruff/"><img src="https://img.shields.io/badge/Ruff-lint%20%2B%20format-D7FF64?style=for-the-badge&logo=ruff&logoColor=000000" alt="Ruff"/></a>
   <a href="https://mypy-lang.org/"><img src="https://img.shields.io/badge/mypy-typed-2B5B84?style=for-the-badge&logo=mypy&logoColor=white" alt="mypy"/></a>
   <a href="https://typer.tiangolo.com/"><img src="https://img.shields.io/badge/CLI-Typer-009485?style=for-the-badge&logo=typer&logoColor=white" alt="Typer"/></a>
-  <img src="https://img.shields.io/badge/no_SQLModel-✓-4A4A4A?style=for-the-badge&logo=fastapi&logoColor=white" alt="No SQLModel / Tortoise ORM"/>
+  <img src="https://img.shields.io/badge/table_+_schema-SQLModel-4A4A4A?style=for-the-badge&logo=fastapi&logoColor=white" alt="SQLModel table + schema"/>
 </p>
 
 ---
@@ -58,12 +58,12 @@ create-fastapi **工具本身**与**生成项目**使用不同技术栈，职责
 | 运行时 | Python 3.13 · [uv](https://github.com/astral-sh/uv) |
 | Web | [FastAPI](https://fastapi.tiangolo.com/)（APIRouter + Depends） |
 | 校验 / 配置 | [Pydantic](https://docs.pydantic.dev/) 2 · pydantic-settings |
-| 数据 | [SQLAlchemy](https://www.sqlalchemy.org/) 2.0 async · [Alembic](https://alembic.sqlalchemy.org/) · asyncpg |
+| 数据 | [SQLModel](https://github.com/fastapi/sqlmodel) · [Alembic](https://alembic.sqlalchemy.org/) · asyncpg |
 | 代码质量 | [ruff](https://docs.astral.sh/ruff/) · [mypy](https://mypy-lang.org/) |
 | ASGI | [uvicorn](https://www.uvicorn.org/)（开发 `--reload`，生产 `--workers`） |
 | 生产 | uvicorn + supervisor + nginx |
 
-> 不依赖 SQLModel / Tortoise ORM。
+> [SQLModel](https://github.com/fastapi/sqlmodel) 由 FastAPI 官方维护，内置 SQLAlchemy 2.0 与 Pydantic；本模板以 **SQLModel async** 为数据层，`models/`（`table=True`）与 `schemas/`（API 入出参）职责分离。
 
 **可选模块**（`--redis` / `--celery` / `--docker`，不计入核心栈）：
 
@@ -77,12 +77,30 @@ create-fastapi **工具本身**与**生成项目**使用不同技术栈，职责
 
 | | |
 |---|---|
-| **纯 FastAPI + Pydantic** | APIRouter + Depends，入/出参原生 Pydantic；`schemas/` 与 `models/` 职责分离 |
+| **SQLModel + FastAPI** | `table=True` 表模型 + 无表 schema；`SessionDep` 依赖注入 |
 | **现代工具链** | uv 依赖管理 · ruff lint/format · mypy 类型检查 · pydantic-settings 配置 |
-| **SQLAlchemy 2.0 async** | `Mapped` / `mapped_column` · async session · Alembic 迁移 |
+| **async 数据层** | SQLModel · async session · Alembic 迁移（`SQLModel.metadata`） |
 | **生产就绪** | uvicorn + supervisor + nginx 模板 · 可选 Docker 容器化 |
 | **可选模块** | `--redis` · `--celery`（强制 Redis）· `--docker` |
 | **自定义模板** | 内置 / 本地目录 / git 仓库，同一套 Jinja 约定与模块门控 |
+
+## 设计参考
+
+本脚手架为 **纯 API、Typer 一键生成** 定位，参考了 FastAPI 官方组织下的项目，但刻意与全栈模板划界：
+
+| 参考 | 链接 | 借鉴 |
+|------|------|------|
+| [full-stack-fastapi-template](https://github.com/fastapi/full-stack-fastapi-template) | FastAPI 官方全栈模板 | 路由拆分、`SessionDep`、Settings、Docker prestart 思路 |
+| [sqlmodel](https://github.com/fastapi/sqlmodel) | FastAPI 官方 ORM | 本模板默认数据层；内置 SQLAlchemy 2.0 |
+| [create-flask](https://github.com/xiongxianzhu/create-flask) | 姊妹 CLI 脚手架 | Typer 行为、Jinja 门控、只生成不代跑 |
+
+| 维度 | full-stack-fastapi-template | create-fastapi |
+|------|----------------------------|----------------|
+| 定位 | 全栈（React + API + Traefik） | 纯 API 脚手架 |
+| 数据层 | SQLModel（同步 Session） | SQLModel **async** + `schemas/` 分离 |
+| 业务层 | `crud.py` | `services/` |
+| 生成方式 | Copier | Typer + Jinja2 |
+| 生产入口 | `fastapi run` / Docker 编排 | uvicorn + supervisor |
 
 ## 安装
 
@@ -219,8 +237,8 @@ my-api/
 │   ├── core/            # 配置、异常、鉴权占位
 │   ├── db/              # async engine / session / get_db
 │   ├── api/             # APIRouter + Depends
-│   ├── models/          # SQLAlchemy 2.0 模型
-│   ├── schemas/         # Pydantic 入/出参
+│   ├── models/          # SQLModel 表模型（table=True）
+│   ├── schemas/         # SQLModel API 入出参（无 table）
 │   ├── services/        # 业务逻辑
 │   └── tasks/           # Celery 任务（--celery）
 ├── alembic/             # 数据库迁移

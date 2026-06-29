@@ -72,8 +72,8 @@ def test_pyproject_name_substituted(tmp_path: Path) -> None:
     content = (target / "pyproject.toml").read_text(encoding="utf-8")
     assert 'name = "my-api"' in content
     assert "fastapi>=" in content
-    assert "uvicorn" in content
-    assert "gunicorn" not in content
+    assert "sqlmodel>=" in content
+    assert "sqlalchemy[asyncio]" not in content
     assert "redis" not in content
     assert "celery" not in content
 
@@ -88,6 +88,17 @@ def test_no_flask_deps(tmp_path: Path) -> None:
         encoding="utf-8"
     )
     assert "APIRouter" in health
+
+
+def test_sqlmodel_stack(tmp_path: Path) -> None:
+    target = tmp_path / "my-api"
+    generate_project(ProjectOptions(name="my-api", target_dir=target))
+    alembic_env = (target / "alembic" / "env.py").read_text(encoding="utf-8")
+    assert "SQLModel.metadata" in alembic_env
+    deps = (target / "app" / "api" / "deps.py").read_text(encoding="utf-8")
+    assert "SessionDep" in deps
+    assert "sqlmodel" in deps
+    assert not (target / "app" / "db" / "base.py").exists()
 
 
 def test_supervisor_uses_uvicorn(tmp_path: Path) -> None:
