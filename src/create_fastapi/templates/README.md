@@ -38,6 +38,23 @@ uv run uvicorn app.main:app --reload
 
 健康检查 → `GET /api/v1/health` · 文档 → `/docs`
 
+## 环境变量
+
+`make setup` 或 `cp .env.example .env` 后，至少将 `SECRET_KEY` 改为随机强密钥（`.env.example` 中的占位值不可用于生产）：
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+将输出填入 `.env` 的 `SECRET_KEY=` 即可；按需修改 `DATABASE_URL` 等其余项。
+
+## 依赖说明
+
+| 环境 | 命令 | 内容 |
+|------|------|------|
+| 开发 | `make install` / `uv sync` | `fastapi[standard]` · `uvicorn[standard]`（含 uvloop、watchfiles、表单/邮箱校验等）+ `dev` 组 |
+| 生产 | `make prod-install` | 运行时依赖（含 `[standard]` extras），`uv sync --frozen --no-dev` |
+
 ## 常用命令
 
 | 场景 | 命令 |

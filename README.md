@@ -106,11 +106,16 @@ create-fastapi **工具本身**与**生成项目**使用不同技术栈，职责
 
 **要求**：Python 3.13+；推荐 [uv](https://github.com/astral-sh/uv)。使用 git 模板时需系统已安装 `git`。
 
+**安装方式**：常用 **`uv tool install`** 全局安装 CLI；偶尔使用或不想污染 PATH 时，可用 **`uvx`** 临时运行（见下文）。
+
 ### PyPI（发布后）
 
 ```bash
 # 推荐：全局 CLI，任意目录可用
 uv tool install create-fastapi
+
+# 临时运行，无需全局安装
+uvx create-fastapi my-api
 
 # 或 pip
 pip install create-fastapi
@@ -125,9 +130,30 @@ uv tool install git+https://github.com/xiongxianzhu/create-fastapi.git
 # 更新或重装（上游有变更、安装失败或命中旧缓存时）
 uv tool install --reinstall git+https://github.com/xiongxianzhu/create-fastapi.git
 
+# 临时运行（无需 uv tool install）
+uvx --from git+https://github.com/xiongxianzhu/create-fastapi.git create-fastapi my-api
+
 # 或 pip / pipx
 pip install git+https://github.com/xiongxianzhu/create-fastapi.git
 pipx install git+https://github.com/xiongxianzhu/create-fastapi.git
+```
+
+### 临时运行（uvx）
+
+`uvx` 在隔离环境中执行 CLI，**不会**在 PATH 中留下 `create-fastapi` 命令；适合试玩、CI 或文档 one-liner。生成项目后的 `uv sync`、迁移、启动与全局安装方式相同。
+
+```bash
+# PyPI（发布后）
+uvx create-fastapi my-api
+
+# GitHub（当前）
+uvx --from git+https://github.com/xiongxianzhu/create-fastapi.git create-fastapi my-api
+
+# 可选模块
+uvx --from git+https://github.com/xiongxianzhu/create-fastapi.git create-fastapi my-api --redis --docker
+
+# 本地仓库调试（在 create-fastapi 项目根目录）
+uvx --from . create-fastapi my-api
 ```
 
 ### 本地开发（贡献 / 调试）
@@ -146,6 +172,9 @@ uv run create-fastapi my-api
 ```bash
 create-fastapi --version
 create-fastapi --help
+
+# 若使用 uvx 而未全局安装
+uvx --from git+https://github.com/xiongxianzhu/create-fastapi.git create-fastapi --version
 ```
 
 ### 卸载

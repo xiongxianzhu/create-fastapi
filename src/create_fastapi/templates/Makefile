@@ -12,7 +12,7 @@ MSG ?= update
 help: ## 显示可用命令
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
-install: ## 安装依赖（uv sync）
+install: ## 安装依赖（含 dev 组）
 	$(UV) sync
 
 setup: ## 复制 .env.example 为 .env（若不存在）
@@ -41,7 +41,7 @@ typecheck: ## mypy 类型检查
 
 check: lint typecheck test ## lint + mypy + pytest
 
-prod-install: ## 生产依赖（frozen、无 dev）
+prod-install: ## 生产依赖（frozen、无 dev 组）
 	$(UV) sync --frozen --no-dev
 
 clean: ## 清理缓存与构建产物

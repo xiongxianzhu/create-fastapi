@@ -71,7 +71,9 @@ def test_pyproject_name_substituted(tmp_path: Path) -> None:
     generate_project(ProjectOptions(name="my-api", target_dir=target))
     content = (target / "pyproject.toml").read_text(encoding="utf-8")
     assert 'name = "my-api"' in content
-    assert "fastapi>=" in content
+    assert "fastapi[standard]>=" in content
+    assert "uvicorn[standard]>=" in content
+    assert "pydantic-settings" in content
     assert "sqlmodel>=" in content
     assert "greenlet>=" in content
     assert "sqlalchemy[asyncio]" not in content
