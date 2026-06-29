@@ -73,6 +73,7 @@ def test_pyproject_name_substituted(tmp_path: Path) -> None:
     assert 'name = "my-api"' in content
     assert "fastapi>=" in content
     assert "sqlmodel>=" in content
+    assert "greenlet>=" in content
     assert "sqlalchemy[asyncio]" not in content
     assert "redis" not in content
     assert "celery" not in content
