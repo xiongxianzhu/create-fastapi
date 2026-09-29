@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 
 from fastapi import FastAPI
 {% if use_redis %}
@@ -21,7 +21,7 @@ from app.core.redis import redis_client
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     settings = get_settings()
 {% if use_redis %}
     await redis_client.initialize(settings.redis_url)
