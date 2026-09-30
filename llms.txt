@@ -7,7 +7,7 @@
 ## Documentation
 
 - [README.md](README.md): 用户文档，含安装、命令参考、生成项目结构、PyPI 镜像说明
-- [AGENT.md](AGENT.md): AI Agent 快速上手指南，含目录职责、约束与修改检查清单
+- [AGENTS.md](AGENTS.md): AI Agent 快速上手指南，含目录职责、约束与修改检查清单
 
 ## Specifications
 

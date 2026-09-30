@@ -326,7 +326,7 @@ uv sync
 
 <p align="center">
   <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-LLM_导航-009688?style=flat-square&logo=readthedocs&logoColor=white" alt="llms.txt"/></a>
-  <a href="AGENT.md"><img src="https://img.shields.io/badge/AGENT.md-AI_指南-4051B5?style=flat-square" alt="AGENT.md"/></a>
+  <a href="AGENTS.md"><img src="https://img.shields.io/badge/AGENTS.md-AI_指南-4051B5?style=flat-square" alt="AGENTS.md"/></a>
   <a href="https://llmstxt.org/"><img src="https://img.shields.io/badge/spec-llmstxt.org-4A4A4A?style=flat-square" alt="llms.txt spec"/></a>
 </p>
 
@@ -334,13 +334,13 @@ uv sync
 
 | 区块 | 指向 |
 |------|------|
-| Documentation | [README.md](README.md)、[AGENT.md](AGENT.md) |
+| Documentation | [README.md](README.md)、[AGENTS.md](AGENTS.md) |
 | Specifications | [docs/prd-create-fastapi.md](docs/prd-create-fastapi.md) |
 | Source Code | `cli.py`、`generator.py`、测试 |
 | Templates | 生成项目 Jinja2 模板 |
 | Optional | 许可证、锁文件、次要配置 |
 
-**适用场景**：Cursor / Copilot 等工具加载仓库上下文、自动化 Agent 贡献代码前读本索引。人类读者可直接看 [README.md](README.md)；Agent 优先读 [AGENT.md](AGENT.md) + `llms.txt`。
+**适用场景**：Cursor / Copilot 等工具加载仓库上下文、自动化 Agent 贡献代码前读本索引。人类读者可直接看 [README.md](README.md)；Agent 优先读 [AGENTS.md](AGENTS.md) + `llms.txt`。
 
 ```bash
 # 将 llms.txt 作为上下文提供给 LLM（示例）
