@@ -29,6 +29,8 @@
 
 基于 **Typer** 的 CLI 脚手架。生成文件后由你自行 `uv sync`、迁移与启动——工具不代跑任何初始化命令。
 
+生成项目的管理端健康检查使用 `Authorization` 请求头传递凭证；模板中的鉴权依赖目前仅检查请求头是否存在。
+
 ```bash
 uv tool install git+https://github.com/xiongxianzhu/create-fastapi.git
 create-fastapi my-api

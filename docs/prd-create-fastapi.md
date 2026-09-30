@@ -178,7 +178,7 @@ my-api/
   - 生成后目录结构与上述一致（可选模块除外）；空目录以 `.gitkeep` 占位。
   - `app/main.py` 应通过 `lifespan` 管理 DB 引擎/连接池的 startup 与 shutdown。
   - 应注册全局异常处理器，错误响应 JSON 结构统一（含 `code`、`message` 字段）。
-  - C 端健康检查：`GET /api/v1/health` 返回 200；若生成 admin 路由，则 `GET /api/admin/v1/health` 可带鉴权占位。
+  - C 端健康检查：`GET /api/v1/health` 返回 200；若生成 admin 路由，则 `GET /api/admin/v1/health` 使用 `Authorization` 请求头传递鉴权占位凭证，缺失时返回 401。
   - OpenAPI 文档应可通过 `/docs` 与 `/redoc` 访问（FastAPI 默认行为，模板不得禁用）。
   - `deploy/supervisor/` 模板应直接以 uvicorn 作为进程 command，**不得**默认使用 gunicorn。
 

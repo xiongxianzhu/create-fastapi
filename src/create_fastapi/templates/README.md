@@ -56,6 +56,8 @@ uv run fastapi run --host 127.0.0.1 --port 8000 --workers 4
 
 健康检查 → `GET /api/v1/health` · 文档 → `/docs`
 
+管理端健康检查 `GET /api/admin/v1/health` 使用 `Authorization` 请求头传递凭证；当前仅检查是否提供凭证，实际校验逻辑需按业务实现。
+
 ## 环境变量
 
 `make setup` 或 `cp .env.example .env` 后，至少将 `SECRET_KEY` 改为随机强密钥（`.env.example` 中的占位值不可用于生产）：

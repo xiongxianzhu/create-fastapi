@@ -24,7 +24,12 @@ def test_admin_health_requires_token(client: TestClient) -> None:
     assert resp.status_code == 401
 
 
-def test_admin_health_ok(client: TestClient) -> None:
+def test_admin_health_rejects_old_header(client: TestClient) -> None:
     resp = client.get("/api/admin/v1/health", headers={"X-Admin-Token": "test-token"})
+    assert resp.status_code == 401
+
+
+def test_admin_health_ok(client: TestClient) -> None:
+    resp = client.get("/api/admin/v1/health", headers={"Authorization": "test-token"})
     assert resp.status_code == 200
     assert resp.json() == {"status": "ok"}
